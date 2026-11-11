@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include <atomic>
 #include <cstdint>
 #include <functional>
 #include <utility>
@@ -103,6 +104,12 @@ class CountMinSketch {
   }
 
   /** @todo (student) can add their data structures that support count-min sketch operations */
+
+  /** Index of the counter for (row, col) in the flattened sketch matrix */
+  auto Index(uint32_t row, size_t col) const -> size_t { return (static_cast<size_t>(row) * width_) + col; }
+
+  /** Flattened depth x width matrix of counters. Atomic so that Insert can be lock-free. */
+  std::vector<std::atomic<uint32_t>> counts_;
 };
 
 }  // namespace bustub
